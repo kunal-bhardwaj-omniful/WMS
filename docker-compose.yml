@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: my_postgres
+    restart: always
+    ports:
+      - "5433:5432"  # Expose PostgreSQL on 5433 (Host) but keep it running on 5432 (Container)
+    environment:
+      POSTGRES_USER: "wms_user"
+      POSTGRES_PASSWORD: "wms_pass"
+      POSTGRES_DB: "wms_db"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    driver: local
