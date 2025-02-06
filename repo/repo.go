@@ -8,12 +8,10 @@ import (
 type Repository interface {
 }
 
-// Inter
 type repository struct {
 	db *postgres.DbCluster
 }
 
-// Singleton instance of Repository and the sync.Once to ensure it's initialized only once.
 var repo *repository
 var repoOnce sync.Once
 
