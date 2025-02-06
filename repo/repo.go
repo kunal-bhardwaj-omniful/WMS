@@ -1,11 +1,14 @@
 package repo
 
 import (
+	"context"
 	"github.com/omniful/go_commons/db/sql/postgres"
 	"sync"
+	"wms/domain"
 )
 
 type Repository interface {
+	GetAllHubs(ctx context.Context) []domain.Hub
 }
 
 type repository struct {
@@ -24,4 +27,12 @@ func NewRepository(db *postgres.DbCluster) Repository {
 		}
 	})
 	return repo
+}
+
+func (r *repository) GetAllHubs(ctx context.Context) []domain.Hub {
+
+	var hubs []domain.Hub
+	//err := r.db.Find(&hubs).Error
+	r.db.GetMasterDB(ctx).Find(&hubs)
+	return hubs
 }
