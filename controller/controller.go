@@ -18,7 +18,7 @@ func NewController(s service.Service) *Controller {
 	}
 }
 
-// Standardize Error Response for API
+// Standardized error response
 func standardErrorResponse(ctx *gin.Context, statusCode int, message string) {
 	ctx.JSON(statusCode, gin.H{
 		"status":  "error",
@@ -26,7 +26,7 @@ func standardErrorResponse(ctx *gin.Context, statusCode int, message string) {
 	})
 }
 
-// Standardize Success Response for API
+// Standardized success response
 func standardSuccessResponse(ctx *gin.Context, statusCode int, message string, data interface{}) {
 	ctx.JSON(statusCode, gin.H{
 		"status":  "success",
@@ -59,13 +59,12 @@ func (c *Controller) GetSkus() gin.HandlerFunc {
 
 func (c *Controller) GetHubByID() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		hubID := ctx.Param("id")
-		parsedHubID, err := uuid.Parse(hubID)
+		hubID, err := uuid.Parse(ctx.Param("id"))
 		if err != nil {
 			standardErrorResponse(ctx, http.StatusBadRequest, "Invalid hub ID format")
 			return
 		}
-		hub, err := c.service.FetchHubByID(ctx, parsedHubID)
+		hub, err := c.service.FetchHubByID(ctx, hubID)
 		if err != nil {
 			standardErrorResponse(ctx, http.StatusNotFound, "Hub not found")
 			return
@@ -76,18 +75,47 @@ func (c *Controller) GetHubByID() gin.HandlerFunc {
 
 func (c *Controller) GetSkuByID() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		skuID := ctx.Param("id")
-		parsedSkuID, err := uuid.Parse(skuID)
+		skuID, err := uuid.Parse(ctx.Param("id"))
 		if err != nil {
 			standardErrorResponse(ctx, http.StatusBadRequest, "Invalid SKU ID format")
 			return
 		}
-		sku, err := c.service.FetchSkuByID(ctx, parsedSkuID)
+		sku, err := c.service.FetchSkuByID(ctx, skuID)
 		if err != nil {
 			standardErrorResponse(ctx, http.StatusNotFound, "SKU not found")
 			return
 		}
 		standardSuccessResponse(ctx, http.StatusOK, "SKU fetched successfully", sku)
+	}
+}
+
+// Fetch inventory details for a given SKU and Hub
+func (c *Controller) GetInventory() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		skuIDParam := ctx.Query("sku_id")
+		hubIDParam := ctx.Query("hub_id")
+
+		// Validate UUID format
+		skuID, err := uuid.Parse(skuIDParam)
+		if err != nil {
+			standardErrorResponse(ctx, http.StatusBadRequest, "Invalid SKU ID format")
+			return
+		}
+
+		hubID, err := uuid.Parse(hubIDParam)
+		if err != nil {
+			standardErrorResponse(ctx, http.StatusBadRequest, "Invalid Hub ID format")
+			return
+		}
+
+		// Fetch inventory from the service layer
+		inventory, err := c.service.FetchInventory(ctx, skuID, hubID)
+		if err != nil {
+			standardErrorResponse(ctx, http.StatusNotFound, "Inventory not found")
+			return
+		}
+
+		standardSuccessResponse(ctx, http.StatusOK, "Inventory fetched successfully", inventory)
 	}
 }
 
@@ -127,24 +155,21 @@ func (c *Controller) CreateSKU() gin.HandlerFunc {
 	}
 }
 
+// Update inventory quantities (decrease available, increase allocated/damaged)
 func (c *Controller) DecreaseInventory() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var request struct {
-			SkuID        uuid.UUID `json:"sku_id"`
-			HubID        uuid.UUID `json:"hub_id"`
-			AvailableQty int       `json:"available_qty"`
-			AllocatedQty int       `json:"allocated_qty"`
-			DamagedQty   int       `json:"damaged_qty"`
+			SkuID uuid.UUID `json:"sku_id"`
+			HubID uuid.UUID `json:"hub_id"`
+			Qty   int       `json:"available_qty"`
 		}
 
-		// Bind JSON body to the request struct
 		if err := ctx.ShouldBindJSON(&request); err != nil {
 			standardErrorResponse(ctx, http.StatusBadRequest, "Invalid request body")
 			return
 		}
 
-		// Call service to decrease inventory quantities
-		err := c.service.DecreaseInventoryQty(ctx, request.SkuID, request.HubID, request.AvailableQty, request.AllocatedQty, request.DamagedQty)
+		err := c.service.DecreaseInventoryQty(ctx, request.SkuID, request.HubID, request.Qty)
 		if err != nil {
 			standardErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 			return

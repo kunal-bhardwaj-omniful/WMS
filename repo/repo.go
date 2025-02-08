@@ -21,6 +21,7 @@ type Repository interface {
 	DecreaseAllocatedQty(ctx context.Context, skuID, hubID uuid.UUID, qty int) error
 	DecreaseDamagedQty(ctx context.Context, skuID, hubID uuid.UUID, qty int) error
 	DecreaseInventoryQty(ctx context.Context, skuID, hubID uuid.UUID, availableQty, allocatedQty, damagedQty int) error
+	GetInventory(ctx context.Context, skuID, hubID uuid.UUID) (domain.Inventory, error)
 }
 
 type repository struct {
@@ -194,4 +195,15 @@ func (r *repository) DecreaseInventoryQty(ctx context.Context, skuID, hubID uuid
 	tx.Commit()
 
 	return nil
+}
+
+func (r *repository) GetInventory(ctx context.Context, skuID, hubID uuid.UUID) (domain.Inventory, error) {
+	var inventory domain.Inventory
+
+	err := r.db.GetMasterDB(ctx).Where("sku_id = ? AND hub_id = ?", skuID, hubID).First(&inventory).Error
+	if err != nil {
+		return domain.Inventory{}, fmt.Errorf("failed to fetch inventory: %v", err)
+	}
+
+	return inventory, nil
 }

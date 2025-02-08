@@ -65,3 +65,20 @@ type Seller struct {
 	CreatedAt     time.Time `gorm:"type:timestamptz;default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt     time.Time `gorm:"type:timestamptz;default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
+
+type Inventory struct {
+	ID            uuid.UUID  `gorm:"type:uuid;default:uuid_generate_v4();primaryKey" json:"id"`
+	SkuID         uuid.UUID  `gorm:"type:uuid;not null;index" json:"sku_id"`
+	HubID         uuid.UUID  `gorm:"type:uuid;not null;index" json:"hub_id"`
+	AvailableQty  int        `gorm:"not null;default:0;check:available_qty >= 0" json:"available_qty"`
+	AllocatedQty  int        `gorm:"not null;default:0;check:allocated_qty >= 0" json:"allocated_qty"`
+	DamagedQty    int        `gorm:"not null;default:0;check:damaged_qty >= 0" json:"damaged_qty"`
+	Zone          string     `gorm:"type:varchar(50)" json:"zone"`
+	Rack          string     `gorm:"type:varchar(50)" json:"rack"`
+	Bin           string     `gorm:"type:varchar(50)" json:"bin"`
+	MinThreshold  int        `gorm:"default:0" json:"min_threshold"`
+	MaxThreshold  int        `gorm:"default:0" json:"max_threshold"`
+	LastCountedAt *time.Time `gorm:"type:timestamptz" json:"last_counted_at"`
+	CreatedAt     time.Time  `gorm:"type:timestamptz;default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt     time.Time  `gorm:"type:timestamptz;default:CURRENT_TIMESTAMP;autoUpdateTime" json:"updated_at"`
+}
