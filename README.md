@@ -1,6 +1,29 @@
 # 📦 Warehouse Management System (WMS)
 
-A backend service built using **Golang** and **Gin** for managing hubs, SKUs, and their inventories. The system supports standard CRUD operations, along with inventory management between different warehouses (hubs).
+A backend system built with Golang to manage Hubs, SKUs, and Inventory across warehouse locations.
+
+---
+
+## 🧱 Architecture
+
+This project follows a layered **MVC-inspired architecture** with clear separation of concerns:
+
+### ➤ Model (`/domain`)
+- Plain Go structs representing database entities: `Hub`, `SKU`, `Inventory`.
+- No business logic; just data representation.
+
+### ➤ Repository Layer (`/repo`)
+- Responsible for all **database interactions** using GORM.
+- Contains methods like `CreateHub`, `GetAllSkus`, `DecreaseAvailableQty`, etc.
+- Encapsulates SQL logic and data access patterns.
+
+### ➤ Service Layer (`/service`)
+- Implements business logic and validations (e.g. ID checks, name required).
+- Serves as a bridge between controllers and repositories.
+
+### ➤ Controller/Handler Layer (`/controller`)
+- Exposes HTTP APIs using **Gin** web framework.
+- Handles JSON binding, request validation, and response formatting.
 
 ---
 
