@@ -61,18 +61,11 @@ This API manages **Hubs**, **SKUs**, and **Inventory**. It supports creating hub
   "location": "New York"
 }
 Success Response (201):
-
-json
-Copy
-Edit
 {
   "message": "hub created successfully"
 }
 Error Response (400):
 
-json
-Copy
-Edit
 {
   "error": "hub name cannot be empty"
 }
@@ -80,10 +73,6 @@ Edit
 GET /api/v1/hubs
 
 Success Response (200):
-
-json
-Copy
-Edit
 [
   {
     "id": "8db7a31f-03fa-4c3b-a2d5-07b6a53de7f1",
@@ -96,9 +85,6 @@ GET /api/v1/hubs/{id}
 
 Success Response (200):
 
-json
-Copy
-Edit
 {
   "id": "8db7a31f-03fa-4c3b-a2d5-07b6a53de7f1",
   "name": "Main Hub",
@@ -106,9 +92,6 @@ Edit
 }
 Error Response (404):
 
-json
-Copy
-Edit
 {
   "error": "hub not found"
 }
@@ -118,26 +101,17 @@ POST /api/v1/skus
 
 Request Body:
 
-json
-Copy
-Edit
 {
   "name": "Product A",
   "description": "Blue T-shirt"
 }
 Success Response (201):
 
-json
-Copy
-Edit
 {
   "message": "sku created successfully"
 }
 Error Response (400):
 
-json
-Copy
-Edit
 {
   "error": "SKU name cannot be empty"
 }
@@ -146,9 +120,6 @@ GET /api/v1/skus
 
 Success Response (200):
 
-json
-Copy
-Edit
 [
   {
     "id": "45f7a31e-12ad-46b1-91d4-05c7c6e539ee",
@@ -161,9 +132,6 @@ GET /api/v1/skus/{id}
 
 Success Response (200):
 
-json
-Copy
-Edit
 {
   "id": "45f7a31e-12ad-46b1-91d4-05c7c6e539ee",
   "name": "Product A",
@@ -171,9 +139,6 @@ Edit
 }
 Error Response (404):
 
-json
-Copy
-Edit
 {
   "error": "SKU not found"
 }
@@ -183,9 +148,6 @@ GET /api/v1/inventory?sku_id={sku_id}&hub_id={hub_id}
 
 Success Response (200):
 
-json
-Copy
-Edit
 {
   "sku_id": "45f7a31e-12ad-46b1-91d4-05c7c6e539ee",
   "hub_id": "8db7a31f-03fa-4c3b-a2d5-07b6a53de7f1",
@@ -195,9 +157,6 @@ Edit
 }
 Error Response (404):
 
-json
-Copy
-Edit
 {
   "error": "failed to fetch inventory"
 }
@@ -206,9 +165,6 @@ POST /api/v1/inventory/decrease
 
 Request Body:
 
-json
-Copy
-Edit
 {
   "sku_id": "45f7a31e-12ad-46b1-91d4-05c7c6e539ee",
   "hub_id": "8db7a31f-03fa-4c3b-a2d5-07b6a53de7f1",
@@ -218,25 +174,16 @@ Edit
 }
 Success Response (200):
 
-json
-Copy
-Edit
 {
   "message": "inventory decreased successfully"
 }
 Error Response (400):
 
-json
-Copy
-Edit
 {
   "error": "quantities must be non-negative"
 }
 Error Response (422):
 
-json
-Copy
-Edit
 {
   "error": "not enough available/allocated/damaged quantity"
 }
