@@ -71,6 +71,7 @@ Error Response (400):
   "error": "hub name cannot be empty"
 }
 ```
+```json
 🔹 Get All Hubs
 GET /api/v1/hubs
 
@@ -82,6 +83,7 @@ Success Response (200):
     "location": "New York"
   }
 ]
+```
 🔹 Get Hub by ID
 GET /api/v1/hubs/{id}
 
