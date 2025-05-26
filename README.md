@@ -7,8 +7,6 @@ A backend system built with Golang to manage Hubs, SKUs, and Inventory across wa
 
 The data model and relationships for the Warehouse Management System can be viewed [here (ERD GitHub Commit)](https://github.com/kunal-bhardwaj-omniful/ERD/commit/6d0a3a98683527436aa8f17ff9ea121ae782209c).
 
-``
-
 This project follows a layered **MVC-inspired architecture** with clear separation of concerns:
 
 ### ➤ Model (`/domain`)
