@@ -60,6 +60,7 @@ This API manages **Hubs**, **SKUs**, and **Inventory**. It supports creating hub
   "name": "Main Hub",
   "location": "New York"
 }
+
 Success Response (201):
 {
   "message": "hub created successfully"
@@ -69,6 +70,7 @@ Error Response (400):
 {
   "error": "hub name cannot be empty"
 }
+```
 🔹 Get All Hubs
 GET /api/v1/hubs
 
