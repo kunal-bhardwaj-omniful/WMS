@@ -46,10 +46,6 @@ This API manages **Hubs**, **SKUs**, and **Inventory**. It supports creating hub
 
 /api/v1
 
-yaml
-Copy
-Edit
-
 ---
 
 ## 🏬 Hubs
